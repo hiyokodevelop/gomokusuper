@@ -1,96 +1,18 @@
-
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gomoku with Google Login</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <title>リアルタイム五目並べ</title>
+  <style>
+    #board { display: grid; grid-template-columns: repeat(15, 40px); }
+    .cell { width: 40px; height: 40px; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; }
+  </style>
 </head>
 <body>
-  <button id="login-btn">Login with Google</button>
-  <div id="game-status"></div>
-
-  <script>
-    const SUPABASE_URL = 'https://jeiitaeuqoxikqyqirgt.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplaWl0YWV1cW94aWtxeXFpcmd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk1MjIxODMsImV4cCI6MjA0NTA5ODE4M30.RdzoPOcmu53HNSTcCxZbwFvDeZzuNRWsUYKPii-TqPo';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // Googleログイン処理
-    document.getElementById('login-btn').addEventListener('click', async () => {
-      const { user, session, error } = await supabase.auth.signIn({
-        provider: 'google',
-      });
-
-      if (error) {
-        console.error('Error logging in:', error.message);
-      } else {
-        console.log('Logged in as:', user);
-        await registerPlayer(user);
-      }
-    });
-
-    // プレイヤーをデータベースに登録
-    async function registerPlayer(user) {
-      const { data, error } = await supabase
-        .from('players')
-        .upsert({ id: user.id, name: user.user_metadata.full_name, email: user.email });
-
-      if (error) {
-        console.error('Error registering player:', error);
-      } else {
-        document.getElementById('game-status').innerText = `Welcome ${user.user_metadata.full_name}! Waiting for other players...`;
-        checkForGame();
-      }
-    }
-
-    // ゲームへの参加チェック
-    async function checkForGame() {
-      const { data, error } = await supabase
-        .from('games')
-        .select('*')
-        .eq('status', 'waiting')
-        .limit(1);
-
-      if (data.length > 0) {
-        joinGame(data[0].id);
-      } else {
-        await createNewGame();
-      }
-    }
-
-    // ゲームに参加
-    async function joinGame(gameId) {
-      // プレイヤーの現在のゲームを更新
-      const user = supabase.auth.user();
-      await supabase
-        .from('players')
-        .update({ current_game_id: gameId })
-        .eq('id', user.id);
-
-      startGame(gameId);
-    }
-
-    // 新しいゲームを作成
-    async function createNewGame() {
-      const { data, error } = await supabase
-        .from('games')
-        .insert([{ board: '000000000000000000000000000000000000000000000000000000000000000000000000000000000', current_player: 'X', status: 'waiting' }])
-        .single();
-
-      if (error) {
-        console.error('Error creating game:', error);
-      } else {
-        await joinGame(data.id);
-      }
-    }
-
-    // ゲーム開始
-    function startGame(gameId) {
-      document.getElementById('game-status').innerText = `Game started! Game ID: ${gameId}`;
-      // ボードの描画やプレイヤーのターンなどをここに実装
-    }
-  </script>
+  <h1>リアルタイム五目並べ</h1>
+  <div id="board"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="gomoku.js"></script>
 </body>
 </html>
