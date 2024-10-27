@@ -1,5 +1,5 @@
 // Supabaseの初期化
-const SUPABASE_URL = 'jeiitaeuqoxikqyqirgt.supabase.co';
+const SUPABASE_URL = 'https://jeiitaeuqoxikqyqirgt.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplaWl0YWV1cW94aWtxeXFpcmd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk1MjIxODMsImV4cCI6MjA0NTA5ODE4M30.RdzoPOcmu53HNSTcCxZbwFvDeZzuNRWsUYKPii-TqPo';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
