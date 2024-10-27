@@ -1,5 +1,7 @@
 // Supabaseの初期化
-import createClient from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+// import createClient from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+console.log(supabase)
+const { createClient } = supabase
 const SUPABASE_URL = 'https://jeiitaeuqoxikqyqirgt.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplaWl0YWV1cW94aWtxeXFpcmd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk1MjIxODMsImV4cCI6MjA0NTA5ODE4M30.RdzoPOcmu53HNSTcCxZbwFvDeZzuNRWsUYKPii-TqPo';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
