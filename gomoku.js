@@ -43,7 +43,7 @@ for (let y = 0; y < BOARD_SIZE; y++) {
     cell.classList.add("cell");
     cell.dataset.x = x;
     cell.dataset.y = y;
-    cell.addEventListener("click", () => placePiece(x, y));
+    cell.addEventListener("click", () => placePiece(x, y, cell));
     boardElement.appendChild(cell);
   }
 }
@@ -67,7 +67,7 @@ function renderBoard(data) {
 }
 
 // 石を置く処理
-async function placePiece(x, y) {
+async function placePiece(x, y, cell) {
   if (!playerColor) {
     alert("プレイヤーカラーを選択してください。");
     return;
