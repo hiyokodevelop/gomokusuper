@@ -61,6 +61,7 @@ function renderBoard(data) {
     const cellElement = document.querySelector(`.cell[data-x="${cell.x}"][data-y="${cell.y}"]`);
     if (cellElement) {
       cellElement.style.backgroundColor = playerColors[cell.player_id - 1];
+      cellElement.classList.remove("loading");  // くるくるを解除
     }
   });
 }
@@ -71,8 +72,10 @@ async function placePiece(x, y) {
     alert("プレイヤーカラーを選択してください。");
     return;
   }
+  cell.classList.add("loading");  // くるくるを追加
   const { data, error } = await _supabase.from('gomoku_board').insert([{ x, y, player_id: playerId }]);
   if (error) console.error(error);
+  cell.classList.remove("loading");  // エラー時はくるくるを解除
 }
 
 // リアルタイムの更新を監視
