@@ -129,38 +129,50 @@
       });
     }
 
-    // 特定の方向に連続して石があるかチェックする関数
-    function checkDirection(board, x, y, dx, dy) {
-      const player = board[y][x];
+  // 五目並べの勝利判定メソッド
+  function checkWin(board, x, y, player) {
+    const WIN_CONDITION = 5; // 5つ揃えば勝利
+    const directions = [
+      { dx: 1, dy: 0 },   // 横
+      { dx: 0, dy: 1 },   // 縦
+      { dx: 1, dy: 1 },   // 右下がりの斜め
+      { dx: 1, dy: -1 }   // 左下がりの斜め
+    ];
+
+    // 各方向で5つ揃っているかを確認
+    for (let { dx, dy } of directions) {
       let count = 1;
+
+      // 前方向（正方向）
       for (let i = 1; i < WIN_CONDITION; i++) {
         const nx = x + i * dx;
         const ny = y + i * dy;
-        if (nx >= 0 && nx < BOARD_SIZE && ny >= 0 && ny < BOARD_SIZE && board[ny][nx] === player) {
+        if (nx >= 0 && nx < board.length && ny >= 0 && ny < board[0].length && board[ny][nx] === player) {
           count++;
         } else {
           break;
         }
       }
+
+      // 逆方向
       for (let i = 1; i < WIN_CONDITION; i++) {
         const nx = x - i * dx;
         const ny = y - i * dy;
-        if (nx >= 0 && nx < BOARD_SIZE && ny >= 0 && ny < BOARD_SIZE && board[ny][nx] === player) {
+        if (nx >= 0 && nx < board.length && ny >= 0 && ny < board[0].length && board[ny][nx] === player) {
           count++;
         } else {
           break;
         }
       }
-      return count >= WIN_CONDITION;
+
+      // 勝利条件を満たしている場合はtrueを返す
+      if (count >= WIN_CONDITION) {
+        return true;
+      }
     }
 
-    // 勝利条件をチェックする関数
-    function checkWin(board, x, y) {
-      return checkDirection(board, x, y, 1, 0) ||  // 横
-             checkDirection(board, x, y, 0, 1) ||  // 縦
-             checkDirection(board, x, y, 1, 1) ||  // 右下がりの斜め
-             checkDirection(board, x, y, 1, -1);   // 左下がりの斜め
-    }
+    return false;
+  }
 
     // 石を置く処理
     async function placePiece(x, y, cell) {
@@ -186,7 +198,7 @@
         console.log([payload.new])
         const board = Array.from(Array(BOARD_SIZE), () => Array(BOARD_SIZE).fill(null));
         [payload.new].forEach(cell => {
-          if (checkWin(board, cell.x, cell.y)) {
+          if (checkWin(board, cell.x, cell.y, cell.player_id - 1)) {
             alert(`${playerColors[cell.player_id - 1]}の勝利です！`);
           }
         });
