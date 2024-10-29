@@ -46,7 +46,7 @@
   </style>
 </head>
 <body>
-  <h1>GomokuSuper ver 1.7</h1>
+  <h1>GomokuSuper ver 1.8</h1>
 
   <!-- 色選択エリア -->
   <div id="color-selection">
@@ -210,7 +210,7 @@
 
         [payload.new].forEach(cell => {
           console.log(cell)
-          if (checkWin(board, cell.x, cell.y, cell.player_id - 1)) {
+          if (checkWin(board, cell.x, cell.y, cell.player_id)) {
             alert(`${playerColors[cell.player_id - 1]}の勝利です！`);
           }
         });
