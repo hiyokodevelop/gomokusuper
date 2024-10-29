@@ -50,7 +50,12 @@ async function placePiece(x, y) {
 }
 
 // リアルタイムの更新を監視
-supabase
+console.log("test")
+console.log(_supabase
+    .from('gomoku_board'))
+console.log("test2")
+console.log(_supabase)
+_supabase
   .from('gomoku_board')
   .on('INSERT', payload => {
     renderBoard([payload.new]);
