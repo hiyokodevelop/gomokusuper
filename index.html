@@ -46,7 +46,7 @@
   </style>
 </head>
 <body>
-  <h1>GomokuSuper ver 1.4</h1>
+  <h1>GomokuSuper ver 1.5</h1>
 
   <!-- 色選択エリア -->
   <div id="color-selection">
@@ -69,6 +69,7 @@
     const colorSelectionElement = document.getElementById("color-selection");
     const playerInfoElement = document.getElementById("player-info");
 
+    const board = Array.from(Array(BOARD_SIZE), () => Array(BOARD_SIZE).fill(null));
     const playerColors = ['red', 'blue', 'green', 'purple', 'orange', 'brown'];
     let playerId = Math.floor(Math.random() * 6) + 1;
     let playerColor = null;
@@ -193,19 +194,19 @@
       .channel('public:gomoku_board')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'gomoku_board' }, payload => {
         console.log('postgres_changes')
-        // renderBoard([payload.new]);
+        renderBoard([payload.new]);
         // 更新後のボードで勝利判定
         console.log([payload.new])
 
-        const board = Array.from(Array(BOARD_SIZE), () => Array(BOARD_SIZE).fill(null));
-        [payload.new].forEach(cell => {
-          const cellElement = document.querySelector(`.cell[data-x="${cell.x}"][data-y="${cell.y}"]`);
-          if (cellElement) {
-            cellElement.style.backgroundColor = playerColors[cell.player_id - 1];
-            cellElement.classList.remove("loading");  // くるくるを解除
-          }
-          board[cell.y][cell.x] = cell.player_id;
-        });
+        // const board = Array.from(Array(BOARD_SIZE), () => Array(BOARD_SIZE).fill(null));
+        // [payload.new].forEach(cell => {
+        //   const cellElement = document.querySelector(`.cell[data-x="${cell.x}"][data-y="${cell.y}"]`);
+        //   if (cellElement) {
+        //     cellElement.style.backgroundColor = playerColors[cell.player_id - 1];
+        //     cellElement.classList.remove("loading");  // くるくるを解除
+        //   }
+        //   board[cell.y][cell.x] = cell.player_id;
+        // });
 
         [payload.new].forEach(cell => {
           if (checkWin(board, cell.x, cell.y, cell.player_id - 1)) {
