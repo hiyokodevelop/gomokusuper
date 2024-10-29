@@ -1,18 +1,40 @@
 // Supabaseの初期化
-// import createClient from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 const { createClient } = supabase
 const SUPABASE_URL = 'https://jeiitaeuqoxikqyqirgt.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplaWl0YWV1cW94aWtxeXFpcmd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk1MjIxODMsImV4cCI6MjA0NTA5ODE4M30.RdzoPOcmu53HNSTcCxZbwFvDeZzuNRWsUYKPii-TqPo';
 const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ゲームボードの初期設定
 const BOARD_SIZE = 15;
 const boardElement = document.getElementById("board");
+const colorSelectionElement = document.getElementById("color-selection");
+const playerInfoElement = document.getElementById("player-info");
 
-// プレイヤー情報の設定（IDと色）
-const playerId = Math.floor(Math.random() * 6) + 1;
 const playerColors = ['red', 'blue', 'green', 'purple', 'orange', 'brown'];
-const playerColor = playerColors[playerId - 1];
+let playerId = Math.floor(Math.random() * 6) + 1;
+let playerColor = null;
+
+// プレイヤーの色選択UI生成
+playerColors.forEach(color => {
+  const colorOption = document.createElement("div");
+  colorOption.classList.add("color-option");
+  colorOption.style.backgroundColor = color;
+  colorOption.addEventListener("click", () => selectColor(color));
+  colorSelectionElement.appendChild(colorOption);
+});
+
+// 色を選択する処理
+function selectColor(color) {
+  playerColor = color;
+  playerId = playerColors.indexOf(color) + 1;
+  colorSelectionElement.style.display = "none";
+  updatePlayerInfo();
+  loadBoard();  // ボードの初期ロード
+}
+
+// プレイヤー情報の表示更新
+function updatePlayerInfo() {
+  playerInfoElement.innerHTML = `あなたの色: <span style="color:${playerColor}">${playerColor}</span>`;
+}
 
 // ボードの生成
 for (let y = 0; y < BOARD_SIZE; y++) {
@@ -45,6 +67,10 @@ function renderBoard(data) {
 
 // 石を置く処理
 async function placePiece(x, y) {
+  if (!playerColor) {
+    alert("プレイヤーカラーを選択してください。");
+    return;
+  }
   const { data, error } = await _supabase.from('gomoku_board').insert([{ x, y, player_id: playerId }]);
   if (error) console.error(error);
 }
@@ -56,6 +82,3 @@ const channel = _supabase
     renderBoard([payload.new]);
   })
   .subscribe();
-
-// 初期ロード
-loadBoard();
