@@ -127,13 +127,6 @@
         }
         board[cell.y][cell.x] = cell.player_id;
       });
-
-      // 更新後のボードで勝利判定
-      data.forEach(cell => {
-        if (checkWin(board, cell.x, cell.y)) {
-          alert(`${playerColors[cell.player_id - 1]}の勝利です！`);
-        }
-      });
     }
 
     // 特定の方向に連続して石があるかチェックする関数
@@ -187,7 +180,16 @@
     const channel = _supabase
       .channel('public:gomoku_board')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'gomoku_board' }, payload => {
+        console.log('postgres_changes')
         renderBoard([payload.new]);
+        // 更新後のボードで勝利判定
+        console.log([payload.new])
+        [payload.new].forEach(cell => {
+          if (checkWin(board, cell.x, cell.y)) {
+            alert(`${playerColors[cell.player_id - 1]}の勝利です！`);
+          }
+        });
+
       })
       .subscribe();
   </script>
