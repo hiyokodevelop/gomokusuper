@@ -4,7 +4,7 @@ const SUPABASE_URL = 'https://jeiitaeuqoxikqyqirgt.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplaWl0YWV1cW94aWtxeXFpcmd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk1MjIxODMsImV4cCI6MjA0NTA5ODE4M30.RdzoPOcmu53HNSTcCxZbwFvDeZzuNRWsUYKPii-TqPo';
 const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const BOARD_SIZE = 8;
+const BOARD_SIZE = 15;
 const WIN_CONDITION = 5; // 5つ揃ったら勝利
 const boardElement = document.getElementById("board");
 const colorSelectionElement = document.getElementById("color-selection");
