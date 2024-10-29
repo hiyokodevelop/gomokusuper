@@ -1,9 +1,9 @@
-
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
+// Supabaseの初期化
+// import createClient from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+const { createClient } = supabase
 const SUPABASE_URL = 'https://jeiitaeuqoxikqyqirgt.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplaWl0YWV1cW94aWtxeXFpcmd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk1MjIxODMsImV4cCI6MjA0NTA5ODE4M30.RdzoPOcmu53HNSTcCxZbwFvDeZzuNRWsUYKPii-TqPo';
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ゲームボードの初期設定
 const BOARD_SIZE = 15;
@@ -28,7 +28,7 @@ for (let y = 0; y < BOARD_SIZE; y++) {
 
 // 盤の状態を取得して描画
 async function loadBoard() {
-  const { data, error } = await supabase.from('gomoku_board').select('*');
+  const { data, error } = await _supabase.from('gomoku_board').select('*');
   if (error) console.error(error);
   else renderBoard(data);
 }
@@ -45,12 +45,12 @@ function renderBoard(data) {
 
 // 石を置く処理
 async function placePiece(x, y) {
-  const { error } = await supabase.from('gomoku_board').insert([{ x, y, player_id: playerId }]);
+  const { data, error } = await _supabase.from('gomoku_board').insert([{ x, y, player_id: playerId }]);
   if (error) console.error(error);
 }
 
 // リアルタイムの更新を監視
-const channel = supabase
+const channel = _supabase
   .channel('public:gomoku_board')
   .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'gomoku_board' }, payload => {
     renderBoard([payload.new]);
